@@ -1,0 +1,16 @@
+# Gitleaks configuration
+# ----------------------
+# We start from Gitleaks' built-in ruleset (AWS keys, GitHub tokens, private
+# keys, generic API keys, ...) and only add an allowlist for paths that are
+# generated or third-party and should never be scanned.
+title = "DevSecOps pipeline gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Generated / third-party paths"
+paths = [
+  '''^reports/''',
+  '''^\.venv/''',
+]

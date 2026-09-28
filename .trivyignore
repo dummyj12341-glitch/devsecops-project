@@ -1,0 +1,9 @@
+# Trivy ignore file
+# -----------------
+# List CVE IDs here (one per line) to accept a vulnerability that Trivy would
+# otherwise report as HIGH/CRITICAL and use to fail the build, e.g.
+#
+#   CVE-2023-12345   # false positive: vulnerable function not used, reviewed by <name> on <date>
+#
+# It is intentionally EMPTY: every HIGH/CRITICAL finding must be fixed, not
+# ignored. Any entry added here should be justified in the pull request.
