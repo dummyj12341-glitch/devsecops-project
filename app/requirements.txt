@@ -10,3 +10,6 @@ click==8.5.0
 blinker==1.9.0
 gunicorn==26.2.0
 packaging==26.3
+# INSECURE demo: outdated PyYAML with CRITICAL CVEs (CVE-2020-14343, fixed in 5.4).
+# Trivy fails the Dependency Scan and Image Scan gates because of this.
+PyYAML==5.3.1

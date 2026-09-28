@@ -11,7 +11,11 @@ POST /notes   -> create a note, body: {"text": "..."}
 Notes are kept in memory, so they disappear when the container restarts.
 That keeps the project simple: no database to set up for the demo.
 """
+import subprocess
+
 from flask import Flask, jsonify, request
+
+import config  # noqa: F401  (INSECURE demo: hardcoded fake AWS credentials live here)
 
 app = Flask(__name__)
 
@@ -46,7 +50,19 @@ def create_note():
     return jsonify(note), 201
 
 
+@app.get("/ping")
+def ping():
+    """INSECURE demo endpoint: pings a host given in the query string.
+
+    shell=True + user input = OS command injection
+    (e.g. /ping?host=127.0.0.1;cat /etc/passwd). Semgrep flags this.
+    """
+    host = request.args.get("host", "127.0.0.1")
+    result = subprocess.run(f"ping -c 1 {host}", shell=True, capture_output=True, text=True)
+    return jsonify(output=result.stdout), 200
+
+
 if __name__ == "__main__":
-    # Local development only. In the container the app is served by gunicorn.
-    # debug is intentionally OFF (debug=True would expose the Werkzeug debugger).
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    # INSECURE demo: debug=True enables the Werkzeug debugger (remote code execution
+    # if exposed) and binds to all interfaces. Semgrep flags this.
+    app.run(host="0.0.0.0", port=5000, debug=True)
