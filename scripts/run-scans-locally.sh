@@ -39,7 +39,7 @@ docker run --rm \
     declare -A RESULT
 
     echo; echo "==> [1/4] Secret Scan (Gitleaks)"
-    gitleaks git . --config .gitleaks.toml --redact --no-banner \
+    gitleaks git . --log-opts=HEAD --config .gitleaks.toml --redact --no-banner \
       --report-format json --report-path reports/gitleaks.json --exit-code 1
     RESULT[gitleaks]=$?
 

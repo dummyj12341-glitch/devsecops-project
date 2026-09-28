@@ -70,8 +70,12 @@ pipeline {
             steps {
                 // Scans the whole git history of the branch, not just the latest files:
                 // a secret that was committed and later deleted is still leaked.
+                // --log-opts=HEAD limits the scan to commits reachable from THIS branch
+                // (by default gitleaks runs `git log --all`, which would also pick up
+                //  other branches that Jenkins fetched, e.g. `vulnerable` while building `main`).
                 sh '''
                     gitleaks git . \
+                      --log-opts=HEAD \
                       --config .gitleaks.toml \
                       --redact --no-banner \
                       --report-format json --report-path "$REPORTS/gitleaks.json" \
