@@ -1,0 +1,24 @@
+# Runs the Notes API. Used by the Jenkins "Deploy" stage and for local demos:
+#   docker compose up -d --build
+#   curl http://localhost:5000/health
+name: notes
+
+services:
+  notes-api:
+    build: .
+    # Jenkins sets IMAGE_TAG to the build number so the exact image that was
+    # scanned by Trivy is the one that gets deployed. Locally it defaults to "latest".
+    image: notes-api:${IMAGE_TAG:-latest}
+    container_name: notes-api
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    read_only: true            # container filesystem is read-only (hardening)
+    tmpfs:
+      - /tmp                   # gunicorn needs a writable temp dir
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

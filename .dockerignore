@@ -1,0 +1,9 @@
+# Keep the build context small and never send secrets/history to the daemon.
+.git
+.venv
+reports
+jenkins
+docs
+**/__pycache__
+**/.pytest_cache
+app/tests
