@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Pipeline output (reports are archived by Jenkins, not committed)
+reports/
+
+# Local Jenkins settings (contains your machine's docker group id)
+jenkins/.env
