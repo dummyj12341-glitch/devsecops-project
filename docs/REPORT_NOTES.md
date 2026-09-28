@@ -78,7 +78,8 @@ Two branches share the same pipeline:
 When the same scanners are run with `scripts/run-scans-locally.sh` (which does not stop at the first failure), the `vulnerable` branch fails **all four** gates:
 - Gitleaks: `aws-access-token` rule
 - Semgrep: `flask-debug-enabled`, `subprocess-shell-true`, `hardcoded-aws-access-key`
-- Trivy fs and Trivy image: PyYAML 5.3.1, CVE-2020-14343 (CRITICAL) and CVE-2020-1747 (CRITICAL)
+- Trivy fs: PyYAML 5.3.1, CVE-2020-14343 (CRITICAL, fixed in 5.4)
+- Trivy image: the same PyYAML CVE inside the image, plus Trivy's built-in secret scanner finds the AWS key in `/app/config.py` (defence in depth)
 
 📸 Screenshots to include:
 - Stage View of the red `vulnerable` build

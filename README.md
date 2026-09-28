@@ -179,7 +179,7 @@ The repository has two branches with the **same Jenkinsfile**:
    - **Test Result** shows 7 passing tests.
    - Artifacts: all reports with zero findings.
    - `curl http://localhost:5000/health` returns `{"status":"ok"}`, and `docker ps` shows `notes-api … (healthy)`.
-6. **Optional live fix.** On `vulnerable`, delete `app/config.py`, then push and rescan. The build now fails at the **next** gate (Semgrep). That shows each gate works on its own. (Removing the key from the current code doesn't clear the Gitleaks finding, because it is still in git history. Real incident response rotates the key.)
+6. **Optional live fix.** On `vulnerable`, delete `app/config.py` and the `import config` line in `app/app.py`, then push and rescan. The build now fails at the **next** gate (Semgrep). That shows each gate works on its own. (Removing the key from the current code doesn't clear the Gitleaks finding, because it is still in git history. Real incident response rotates the key.)
 
 ## 7. Failure notifications (optional, disabled by default)
 
