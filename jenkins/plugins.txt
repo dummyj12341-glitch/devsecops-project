@@ -1,0 +1,9 @@
+# Jenkins plugins installed at image build time by jenkins-plugin-cli.
+# (No version pin = latest compatible version with this Jenkins LTS.)
+git
+workflow-aggregator
+pipeline-stage-view
+junit
+htmlpublisher
+credentials-binding
+email-ext

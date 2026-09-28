@@ -1,0 +1,40 @@
+# Local Jenkins for the DevSecOps pipeline.
+#
+# Start:   cd jenkins && docker compose up -d --build
+# UI:      http://localhost:8080
+#
+# Docker socket permissions - approach used:
+#   The host's /var/run/docker.sock is mounted into the container, so Jenkins
+#   can build images and run `docker compose` on the host daemon. The socket is
+#   owned by a group (e.g. "docker", or root on Docker Desktop). With
+#   `group_add` the jenkins user joins THAT group id, which is all it needs.
+#   The container still runs as the unprivileged jenkins user - no root
+#   entrypoint and no `chmod 666` on the socket.
+#   Set the group id once:   echo DOCKER_GID=$(stat -c %g /var/run/docker.sock) > .env
+#   (Note: access to the Docker socket is effectively root on the host - fine
+#    for a local lab, but protect it carefully on a real server.)
+name: jenkins
+
+services:
+  jenkins:
+    build: .
+    image: devsecops-jenkins:latest
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"     # web UI
+      - "50000:50000"   # inbound agents
+    group_add:
+      - "${DOCKER_GID:-0}"
+    extra_hosts:
+      # Lets the Deploy stage reach the app published on the host's port 5000.
+      - "host.docker.internal:host-gateway"
+    environment:
+      # Keep Trivy's vulnerability database between builds (inside jenkins_home).
+      TRIVY_CACHE_DIR: /var/jenkins_home/.cache/trivy
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  jenkins_home:
