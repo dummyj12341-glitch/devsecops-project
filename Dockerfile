@@ -19,7 +19,7 @@ COPY app/requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy only the application code (tests are not shipped to production).
-COPY app/app.py .
+COPY app/*.py ./
 
 # Create an unprivileged user and switch to it.
 RUN useradd --create-home --uid 10001 appuser
